@@ -19,7 +19,7 @@ module.exports = (msg, bot) => {
 }
 
 /**
- * 处理测试逻辑
+ * 处理发送过来的文字逻辑
  * @param msg 发送的消息
  * @param bot wechaty 实例
  */
