@@ -28,7 +28,7 @@ async function handleTextLogic(msg, bot){
         const text = msg.text();
         // 获取发信息的联系人
         const contact = msg.from();
-        // 获取群，如果是群发送的消息，则room有值
+        // 如果是群发送的消息，则room有值
         const room = msg.room();
         // 群发送
         if (room) {
@@ -37,8 +37,14 @@ async function handleTextLogic(msg, bot){
             const marked = await msg.mentionSelf();
             // 如果自己被@
             if(marked) {
+                console.log(`marked: ${text}`)
                 // TODO: 被@处理指令
+                // 获取消息提到的联系人列表
+                const contactList = msg.mention();
+                console.log('消息提到的联系人列表')
+                console.log(contactList)
             }
+
         } else {
             //TODO: 自己逻辑指令
             console.log(`${contact.name()} say: ${text}`);
