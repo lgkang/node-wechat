@@ -1,23 +1,53 @@
+const {onError} = require('./utils');
+const {Say} = require('./Say');
+let say = null
 module.exports = (msg, bot) => {
     console.log(msg)
     console.log(`Message: ${msg}`);
+    say = new Say(this.msg, this.bot)
     const type = msg.type();
+    const typeEnum = bot.Message.Type || {
+        Text: 7
+    };
     switch (type){
-        case 7:
-            handleLogic(msg, bot);
+        // 发送文字消息
+        case typeEnum.Text:
+            handleTextLogic(msg, bot);
             break;
+        case typeEnum.Image:
     }
 }
 
-function handleLogic(msg, bot){
-    const text = msg.text();
-    console.log(text)
-    switch (text){
-        case '测试':
-            msg.say('这就是测试吗')
-            break
-        default:
-            msg.say('没有对应的指令')
-            break;
+/**
+ * 处理测试逻辑
+ * @param msg 发送的消息
+ * @param bot wechaty 实例
+ */
+async function handleTextLogic(msg, bot){
+    try {
+        const text = msg.text();
+        // 获取发信息的联系人
+        const contact = msg.from();
+        // 获取群，如果是群发送的消息，则room有值
+        const room = msg.room();
+        // 群发送
+        if (room) {
+            const topic = await room.topic();
+            console.log(`${topic} Contact: ${contact.name()} say: ${text}`);
+            const marked = await msg.mentionSelf();
+            // 如果自己被@
+            if(marked) {
+                // TODO: 被@处理指令
+            }
+        } else {
+            //TODO: 自己逻辑指令
+            console.log(`${contact.name()} say: ${text}`);
+            // 如果是自己给自己发消息，就回发一条
+            if(msg.self()){
+                say(`自己 say: ${text}`)
+            }
+        }
+    }catch (e) {
+        onError(e, '获取消息错误')
     }
 }
